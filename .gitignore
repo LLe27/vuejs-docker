@@ -1,0 +1,6 @@
+# Node mudles
+/frontend/app/node_modules
+
+# Distribution files
+/frontend/app/dist
+
