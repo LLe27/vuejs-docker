@@ -1,5 +1,6 @@
 # build stage
-FROM node:lts-alpine as build-stage
+# FROM node:lts-alpine as develop-stage
+FROM node:lts-alpine as develop-stage
 
 # Set the working directory to /app
 WORKDIR /app
@@ -13,7 +14,9 @@ RUN npm install
 # Copy current directory into the container current directory
 COPY . .
 
-# Run command to build production files
+# develop stage
+FROM develop-stage as build-stage
+
 RUN npm run build
 
 # production stage
