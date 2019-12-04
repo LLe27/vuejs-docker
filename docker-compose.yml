@@ -5,13 +5,36 @@ services:
     build: 
       context: ./frontend
       target: 'develop-stage'
+    container_name: webapp
     ports:
       - "8080:8080"
+    restart: always
     volumes:
       - './frontend/app/:/app'
     command:  "npm run serve"
     networks:
       - webnet
 
+  database:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    networks:
+      - webnet
+
+  api:
+    build: 
+      context: ./backend/api
+    container_name: restapi
+    ports:
+      - "5000:5000"
+    restart: always
+    volumes: 
+      - ./backend/api:/usr/src/app
+    networks: 
+      - webnet
+
 networks: 
   webnet:
+    driver: bridge

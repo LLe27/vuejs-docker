@@ -1,4 +1,6 @@
 # Node mudles
+/backend/api/node_modules
+/backend/database/node_modules
 /frontend/app/node_modules
 
 # Distribution files
