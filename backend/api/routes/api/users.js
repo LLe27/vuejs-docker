@@ -3,32 +3,68 @@ const mongodb = require('mongodb');
 
 const router = express.Router();
 
-// GET 
+// GET
 router.get('/', async (req, res) => {
-    const users = await loadUsersCollection();
-    res.send(await users.find({}).toArray());
+    try {
+        const collection = await loadUsersCollection();
+        const users = await collection.find({}).toArray();
+
+        res.send({
+            data: users,
+            result: "OK",
+            status: 200
+        });
+    } catch (err) {
+        // Database connection error handling
+        res.status(404).send({
+            result: "Database Not Found",
+            status: 404
+        });
+    }
 })
 
-// POST 
+// POST
 router.post('/', async (req, res) => {
-    const users = await loadUsersCollection();
-    const result = await users.insertOne({
-        createdAt: new Date(),
-        email: req.body.email,
-        password: req.body.password
-    });
+    try {
+        const users = await loadUsersCollection();
+        await users.insertOne({
+            createdAt: new Date(),
+            email: req.body.email,
+            password: req.body.password
+        });
 
-    res.status(201).send(result);
+        res.status(201).send({
+            result: "Created",
+            status: 201
+        });
+    } catch (err) {
+        // Database connection error handling
+        res.status(404).send({
+            result: "Database Not Found",
+            status: 404
+        });
+    }
 })
 
-// DELETE 
+// DELETE
 router.delete('/:id', async (req, res) => {
-    const users = await loadUsersCollection();
-    await users.deleteOne({
-        _id: new mongodb.ObjectID(req.params.id)
-    })
+    try {
+        const users = await loadUsersCollection();
+        await users.deleteOne({
+            _id: new mongodb.ObjectID(req.params.id)
+        })
 
-    res.status(200).send();
+        res.status(200).send({
+            result: "Deleted",
+            status: 200
+        });
+    } catch (err) {
+        // Database connection error handling
+        res.status(404).send({
+            result: "Database Not Found",
+            status: 404
+        });
+    }
 })
 
 async function loadUsersCollection() {
